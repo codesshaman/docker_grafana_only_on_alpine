@@ -6,7 +6,7 @@ Grafana build in Alpine 3.16
 
 ### Step 1: Build configuration
 
-Install make.
+Install make in your host machine.
 
 Build configuraion with command ``make build``.
 
