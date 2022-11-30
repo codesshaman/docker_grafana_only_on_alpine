@@ -13,3 +13,7 @@ Build configuraion with command ``make build``.
 ## Step 2: Configure and manage
 
 Use ``make help`` for display all supported commands.
+
+## Step 3: Install 
+
+docker run -d --name=grafana -p 3000:3000 grafana/grafana
