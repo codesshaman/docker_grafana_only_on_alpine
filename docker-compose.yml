@@ -8,6 +8,9 @@ services:
       dockerfile: Dockerfile
       args:
         GRAFANA_VERSION: $GRAFANA_VERSION
+    volumes:
+      - ./grafana/grafana-config:/etc/grafana
+      - ./grafana/grafana-data:/var/lib/grafana
     ports:
       - "$GRAFANA_PORT:3000"
     restart: unless-stopped
