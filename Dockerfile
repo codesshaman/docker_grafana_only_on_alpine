@@ -1,4 +1,4 @@
-FROM alpine:3.16
+FROM alpine:3.22.0
 
 ARG GRAFANA_VERSION
 RUN mkdir /tmp/grafana \
@@ -6,9 +6,8 @@ RUN mkdir /tmp/grafana \
   && tar xfz /tmp/grafana-${GRAFANA_VERSION}.linux-amd64.tar.gz --strip-components=1 -C /tmp/grafana
 
 
-ARG BASE_IMAGE=alpine:3.11.6
+ARG BASE_IMAGE=alpine:3.22.0
 FROM ${BASE_IMAGE}
-LABEL maintainer "gavin zhou <gavin.zhou@gmail.com>"
 
 ENV PATH=/usr/share/grafana/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     GF_PATHS_CONFIG="/etc/grafana/grafana.ini" \
