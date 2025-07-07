@@ -1,11 +1,11 @@
-FROM alpine:3.22.0
+FROM alpine:3.22.0 AS downloader
 
 ARG GRAFANA_VERSION
 RUN mkdir /tmp/grafana \
   && wget -P /tmp/ https://dl.grafana.com/oss/release/grafana-${GRAFANA_VERSION}.linux-amd64.tar.gz \
   && tar xfz /tmp/grafana-${GRAFANA_VERSION}.linux-amd64.tar.gz --strip-components=1 -C /tmp/grafana
 
-
+# ВОТ ТУТ важно снова указать ARG, иначе оно будет пустым:
 ARG BASE_IMAGE=alpine:3.22.0
 FROM ${BASE_IMAGE}
 
@@ -24,7 +24,8 @@ RUN set -ex \
     && adduser -S -G grafana grafana \
     && apk add --no-cache libc6-compat ca-certificates su-exec bash
 
-COPY --from=0 /tmp/grafana "$GF_PATHS_HOME"
+COPY --from=downloader /tmp/grafana "$GF_PATHS_HOME"
+
 RUN mkdir -p "$GF_PATHS_HOME/.aws" \
     && mkdir -p "$GF_PATHS_PROVISIONING/datasources" \
         "$GF_PATHS_PROVISIONING/dashboards" \
