@@ -1,3 +1,7 @@
+# Объявляем переменную BASE_IMAGE перед использованием в FROM
+ARG BASE_IMAGE=alpine:3.22.0
+
+# Этап загрузки Grafana
 FROM alpine:3.22.0 AS downloader
 
 ARG GRAFANA_VERSION
@@ -5,8 +9,7 @@ RUN mkdir /tmp/grafana \
   && wget -P /tmp/ https://dl.grafana.com/oss/release/grafana-${GRAFANA_VERSION}.linux-amd64.tar.gz \
   && tar xfz /tmp/grafana-${GRAFANA_VERSION}.linux-amd64.tar.gz --strip-components=1 -C /tmp/grafana
 
-# ВОТ ТУТ важно снова указать ARG, иначе оно будет пустым:
-ARG BASE_IMAGE=alpine:3.22.0
+# Основной этап сборки
 FROM ${BASE_IMAGE}
 
 ENV PATH=/usr/share/grafana/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
@@ -36,8 +39,9 @@ RUN mkdir -p "$GF_PATHS_HOME/.aws" \
     && chown -R grafana:grafana "$GF_PATHS_DATA" "$GF_PATHS_HOME/.aws" "$GF_PATHS_LOGS" "$GF_PATHS_PLUGINS" "$GF_PATHS_PROVISIONING" \
     && chmod -R 777 "$GF_PATHS_DATA" "$GF_PATHS_HOME/.aws" "$GF_PATHS_LOGS" "$GF_PATHS_PLUGINS" "$GF_PATHS_PROVISIONING"
 
-COPY ./config.docker/grafana.ini "$GF_PATHS_CONFIG"
-COPY ./run.sh /run.sh
+COPY ./config/grafana.ini "$GF_PATHS_CONFIG"
+COPY ./config/run.sh /run.sh
+RUN chmod +x /run.sh
 
 EXPOSE 3000
 
